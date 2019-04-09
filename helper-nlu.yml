@@ -37,10 +37,9 @@ emailJsRegex:
   type: method
   method: validateEmail
 
-currency:
+katasupmod:
   type: nl
   options:
-    nluId: 'kata:currency'
-    output: value
-    flatten: true
-    threshold: 0.7
+    nluId: 'dewi:awit'
+    output: phrase
+    entity: 'kata'
