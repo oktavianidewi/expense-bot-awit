@@ -16,6 +16,14 @@ intents:
       name:
         nlu: ner
         path: person
+  
+  emailCorrection:
+    priority: 5
+    classifier:
+      - nlu: email
+    attributes:
+      email:
+        nlu: emailJsRegex
 
 
 states:

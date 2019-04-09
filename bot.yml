@@ -1,4 +1,4 @@
-name: ulala
+name: awit
 tag: null
 flows:
     greeting: $include(./flows/greeting.yml)
@@ -9,3 +9,7 @@ flows:
 nlus: $include(./helper-nlu.yml)
 config:
     maxRecursion: 20
+methods:
+    validateEmail(message):
+        code: $include(./methods/validate_email.js)
+        entry: validate

@@ -17,6 +17,26 @@ ner:
   options:
     model: ner-jul-25-lstm
     threshold: 0.5
+
+email:
+  type: regex
+  options:
+    regex:
+      - \w+\@\w+
+      - \w+ \@\w+\.
+      - \w+ \@\w+
+      - \w+\@\w+\.
+      - \w+ \@\w+ \.\w+
+      - \w+ \@ \w+ \.\w+
+      - \w+ \@ \w+ \. \w+
+      - \w+\@\w+ \.\w+
+      - \w+ \@\w+\.\w+
+      - \w+ \@\w+\. \w+
+      - \w+\@\w+\.\w+
+emailJsRegex:
+  type: method
+  method: validateEmail
+
 currency:
   type: nl
   options:
