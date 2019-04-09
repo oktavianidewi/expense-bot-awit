@@ -25,11 +25,11 @@ intents:
       nlu: katasupmod
       options:
         labels: true
-      match: date
+      match: datetime
     attributes:
       payday_dt:
         nlu: katasupmod
-        path: date
+        path: datetime
 
 
 states:
