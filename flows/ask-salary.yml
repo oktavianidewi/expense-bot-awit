@@ -18,7 +18,7 @@ intents:
         nlu: katasupmod
         path: currency
   
-  # TODO: supermodel datetime
+  # TODO: datetime di jemma
   payday:
     priority: 5
     classifier:
