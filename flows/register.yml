@@ -5,7 +5,7 @@ intents:
     type: command
     condition: "content == 'goToRegister'"
   
-  nameInfo:
+  name:
     priority: 5
     classifier:
       - nlu: ner
@@ -17,7 +17,7 @@ intents:
         nlu: ner
         path: person
   
-  emailCorrection:
+  email:
     priority: 5
     classifier:
       - nlu: email
@@ -41,14 +41,14 @@ states:
         condition: "context.email"
       # TODO: callapi untuk save email
       - name: bridgeToSalary
-        condition: "context.name && context.email"
+        condition: "data.name && data.email"
       - name: goToSalary
-        condition: "context.name && context.email"
+        condition: "data.name && data.email"
     enter:
       context.name: attributes.name
       context.email: attributes.email
-      data.name: context.name || attributes.name
-      data.email: context.email || attributes.email
+      data.name: data.name || context.name || attributes.name
+      data.email: data.email || context.email || attributes.email
     transitions: 
       init:
         fallback: true
