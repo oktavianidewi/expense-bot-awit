@@ -12,6 +12,43 @@ greeting:
       hi:
         - hi
         - halo
+yesno:
+  type: keyword
+  options:
+    keywords:
+      'yes':
+          - Yok
+          - yok
+          - ok
+          - sip
+          - 'yes'
+          - yup
+          - oke
+          - okey
+          - okay
+          - betul
+          - iya
+          - benar
+          - bener
+          - 'y'
+          - boleh
+          - yaiyalah
+          - exactly
+          - right
+          - of course
+          - iya dong
+          - Iyeh
+          - Iye
+          - yoi
+      'no':
+          - tidak
+          - ngga
+          - nope
+          - 'no'
+          - bukan
+          - salah
+          - gak
+          - jangan
 ner:
   type: verstandTagger
   options:

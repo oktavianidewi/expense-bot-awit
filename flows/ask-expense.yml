@@ -28,27 +28,36 @@ intents:
   expense:
     priority: 5
     classifier:
-      - nlu: ner
-        options:
-          labels: true
-        match: person
+      nlu: katasupmod
+      options:
+        labels: true
+      match: currency
     attributes:
       expense_amount:
-        nlu: ner
-        path: person
+        nlu: katasupmod
+        path: currency
   
-  # TODO: supermodel datetime
+  # TODO: supermodel number
   quantity:
     priority: 5
     classifier:
-      - nlu: ner
-        options:
-          labels: true
-        match: person
+      nlu: katasupmod
+      options:
+        labels: true
+      match: number
     attributes:
       quantity:
-        nlu: ner
-        path: person
+        nlu: katasupmod
+        path: number
+  
+  yes:
+    classifier:
+      nlu: yesno
+      match: yes
+  no:
+    classifier:
+      nlu: yesno
+      match: no
 
 
 states:
