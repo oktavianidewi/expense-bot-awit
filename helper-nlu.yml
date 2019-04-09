@@ -1,0 +1,26 @@
+start:
+  type: keyword
+  options:
+    keywords:
+      start:
+        - mulai
+        - start
+greeting:
+  type: keyword
+  options:
+    keywords:
+      hi:
+        - hi
+        - halo
+ner:
+  type: verstandTagger
+  options:
+    model: ner-jul-25-lstm
+    threshold: 0.5
+currency:
+  type: nl
+  options:
+    nluId: 'kata:currency'
+    output: value
+    flatten: true
+    threshold: 0.7

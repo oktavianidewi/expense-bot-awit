@@ -1,0 +1,90 @@
+intents:
+  # intent-command
+  intentGoToSalary: 
+    initial: true
+    type: command
+    condition: "content == 'goToSalary'"
+  
+  # TODO: supermodel currency
+  salary:
+    priority: 5
+    classifier:
+      - nlu: currency
+        options:
+          labels: true
+        match: person
+    attributes:
+      salary_amount:
+        nlu: ner
+        path: person
+  
+  # TODO: supermodel datetime
+  payday:
+    priority: 5
+    classifier:
+      - nlu: ner
+        options:
+          labels: true
+        match: person
+    attributes:
+      payday_dt:
+        nlu: ner
+        path: person
+
+
+states:
+  init:
+    initial: true
+    action: 
+      - name: askSalary 
+        condition: "!context.salary_amount"
+      - name: saveSalary
+        condition: "context.salary_amount"
+      # TODO: callapi untuk save salary
+      - name: askPayday
+        condition: "!context.payday_dt"
+      - name: savePayday
+        condition: "context.payday_dt"
+      # TODO: callapi untuk save payday
+      - name: bridgeToExpense
+        condition: "context.salary_amount && context.payday_dt"
+      - name: goToExpense
+        condition: "context.salary_amount && context.payday_dt"
+    enter:
+      context.salary_amount: attributes.salary_amount
+      context.payday_dt: attributes.payday_dt
+    transitions: 
+      init:
+        fallback: true
+actions:
+  # action-command
+  goToMainInfo: 
+    type: command
+    options: 
+      command: goToMainInfo
+  goToExpense: 
+    type: command
+    options: 
+      command: goToExpense
+  # text
+  askSalary:
+    type: text
+    options:
+      text: 'Gaji lo berapa?'
+  saveSalary:
+    type: text
+    options:
+      text: 'Oke, $(data.name), gw simpan gaji lo'
+  askPayday:
+    type: text
+    options:
+      text: 'Tiap tanggal berapa gajian lo?'
+  savePayday:
+    type: text
+    options:
+      text: 'Oke, tanggak itu dicatet sebagai payday rutin lo ya.'
+  # awit intro
+  bridgeToExpense:
+    type: text
+    options:
+      text: 'Udah lengkap nih, sekarang lo bisa masukin data-data pengeluaran harian lo :D'

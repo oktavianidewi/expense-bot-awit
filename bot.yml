@@ -1,0 +1,11 @@
+name: ulala
+tag: null
+flows:
+    greeting: $include(./flows/greeting.yml)
+    register: $include(./flows/register.yml)
+    ask-salary: $include(./flows/ask-salary.yml)
+    ask-expense: $include(./flows/ask-expense.yml)
+    fallback: $include(./flows/fallback.yml)
+nlus: $include(./helper-nlu.yml)
+config:
+    maxRecursion: 20

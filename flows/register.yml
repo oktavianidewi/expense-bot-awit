@@ -1,0 +1,78 @@
+intents:
+  # intent-command
+  intentGoToRegister: 
+    initial: true
+    type: command
+    condition: "content == 'goToRegister'"
+  
+  nameInfo:
+    priority: 5
+    classifier:
+      - nlu: ner
+        options:
+          labels: true
+        match: person
+    attributes:
+      name:
+        nlu: ner
+        path: person
+
+
+states:
+  init:
+    initial: true
+    action: 
+      - name: askName 
+        condition: "!context.name && !context.email"
+      - name: greetWithName
+        condition: "context.name"
+      # TODO: callapi untuk save nama
+      - name: askEmail
+        condition: "context.name && !context.email"
+      - name: saveEmail
+        condition: "context.email"
+      # TODO: callapi untuk save email
+      - name: bridgeToSalary
+        condition: "context.name && context.email"
+      - name: goToSalary
+        condition: "context.name && context.email"
+    enter:
+      context.name: attributes.name
+      context.email: attributes.email
+      data.name: context.name || attributes.name
+      data.email: context.email || attributes.email
+    transitions: 
+      init:
+        fallback: true
+actions:
+  # action-command
+  goToMainInfo: 
+    type: command
+    options: 
+      command: goToMainInfo
+  goToSalary: 
+    type: command
+    options: 
+      command: goToSalary
+  # text
+  askName:
+    type: text
+    options:
+      text: 'Nama lo siapa?'
+  greetWithName:
+    type: text
+    options:
+      text: 'Hi, $(context.name)'
+  askEmail:
+    type: text
+    options:
+      text: 'Email lo apa?'
+  saveEmail:
+    type: text
+    options:
+      text: 'Oke, email lo disimpan.'
+  # awit intro
+  bridgeToSalary:
+    type: text
+    options:
+      text: 'Sekarang masukin data informasi gaji dan tanggal payday lo ya!'

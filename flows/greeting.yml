@@ -1,0 +1,73 @@
+intents:
+  userFollow:
+    initial: true
+    type: data
+    priority: 5
+    condition: "payload.type == 'follow'"
+  firstGreeting:
+    priority: 5
+    initial: true
+    classifier:
+      nlu: start
+      match: start
+  hiGreeting:
+    priority: 5
+    initial: true
+    classifier:
+      nlu: greeting
+      match: hi
+  
+  # intent-command
+  intentGoToMainInfo: 
+    initial: true
+    type: command
+    condition: "content == 'goToMainInfo'"
+
+states:
+  init:
+    initial: true
+    enter:
+      context.greetCount: "(intent == 'hiGreeting') ? (context.greetCount || 0) + 1 : context.greetCount"
+    action: 
+      - name: bridgeToRegister # TODO: scheduler after 5s of no answer 
+        condition: "intent == 'hiGreeting'"
+      - name: goToRegister
+        condition: "intent == 'hiGreeting'"
+    transitions: 
+      init:
+        fallback: true
+
+  welcomeGreeting: 
+    float: 
+      condition: (intent == 'firstGreeting' || intent == 'userFollow')
+    action: 
+      - name: welcomeGreeting
+        condition: "(context.greetCount <= 1 || !context.greetCount)"
+      - name: goToMainInfo
+    transitions: 
+      init:
+        priority: 2
+        condition: "intent == 'intentGoToMainInfo'"
+      welcomeGreeting:
+        fallback: true
+
+actions:
+  # action-command
+  goToMainInfo: 
+    type: command
+    options: 
+      command: goToMainInfo
+  goToRegister: 
+    type: command
+    options: 
+      command: goToRegister
+  # text
+  welcomeGreeting:
+    type: text
+    options:
+      text: 'Hai, terimakasih sudah add AWIT, your personal financial manager.'
+  # awit intro
+  bridgeToRegister:
+    type: text
+    options:
+      text: 'Tak kenal maka tak sayang nih, yuk, kenalan ama AWIT dulu.'

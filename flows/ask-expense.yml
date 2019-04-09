@@ -1,0 +1,121 @@
+# TODO: 
+# - isinya scheduler harian untuk masukin expense, 
+
+# contoh conv 
+# bot generate (reminder):
+# B: Hai, kamu udah keluarin duit untuk apa aja hari ini?
+# M: belum nih, tanya 2 jam lagi aja
+
+# user generate: 
+# M: aku tadi beli pecel 5rb -> variable amount
+# B: jumlahnya berapa?
+# M: beli dua -> variable quantity
+# B: wow, enak ya pecelnyaaa, lain kali dibagi ama aku dong. jadi total pengeluarannya aku catat 10rb ya -> variable total
+# B: ada lagi ga?
+# M: ga
+
+# calculate
+# M: total pengeluaranku hari ini berapa ya?
+
+intents:
+  # intent-command
+  intentGoToExpense: 
+    initial: true
+    type: command
+    condition: "content == 'goToExpense'"
+  
+  # TODO: supermodel currency
+  expense:
+    priority: 5
+    classifier:
+      - nlu: ner
+        options:
+          labels: true
+        match: person
+    attributes:
+      expense_amount:
+        nlu: ner
+        path: person
+  
+  # TODO: supermodel datetime
+  quantity:
+    priority: 5
+    classifier:
+      - nlu: ner
+        options:
+          labels: true
+        match: person
+    attributes:
+      quantity:
+        nlu: ner
+        path: person
+
+
+states:
+  init:
+    initial: true
+    action: 
+      - name: askExpense 
+        condition: "!context.expense_amount"
+      - name: saveExpense
+        condition: "context.expense_amount"
+      # TODO: callapi untuk save expense
+
+      - name: askQuantity 
+        condition: "!context.quantity"
+      - name: saveQuantity
+        condition: "context.quantity"
+      # TODO: callapi untuk save quantity
+    enter:
+      context.expense_amount: attributes.expense_amount
+      context.quantity: attributes.quantity
+      data.expense_amount: data.expense_amount || attributes.expense_amount
+      data.quantity: data.quantity || attributes.quantity
+    transitions: 
+      init:
+        fallback: true
+    
+  askMoreExpense: 
+    float: 
+      condition: "context.expense_amount && context.quantity"
+    action:
+      - name: askMoreExpense
+      # - name: goToMainInfo
+    transitions: 
+      # init:
+      #   priority: 2
+      #   condition: content == 'goToMainInfo'
+      askMoreExpense:
+        fallback: true
+
+actions:
+  # action-command
+  goToMainInfo: 
+    type: command
+    options: 
+      command: goToMainInfo
+  goToExpense: 
+    type: command
+    options: 
+      command: goToExpense
+  # text
+  askExpense:
+    type: text
+    options:
+      text: 'Hai, kamu udah keluarin duit untuk apa aja hari ini?'
+  saveExpense:
+    type: text
+    options:
+      text: 'Oke, $(data.name), gw simpan pengeluaran hariannya.'
+  askQuantity:
+    type: text
+    options:
+      text: 'Jumlahnya berapa?'
+  saveQuantity:
+    type: text
+    options:
+      text: 'Oke, jadi total pengeluarannya aku catat $(context.expense_amount)*$(context.quantity) ya.'
+  askMoreExpense:
+    type: text
+    options:
+      text: 'Ada lagi ga?'
