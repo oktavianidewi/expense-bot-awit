@@ -23,6 +23,10 @@ intents:
     initial: true
     type: command
     condition: "content == 'goToExpense'"
+  intentGoToAskMore: 
+    initial: true
+    type: command
+    condition: "content == 'goToAskMore'"
   
   # expense-category
   tabungan:
@@ -61,15 +65,15 @@ intents:
       nlu: katasupmod
       options:
         labels: true
-      match: currency
+      match: number
     attributes:
       expense_amount:
         nlu: katasupmod
-        path: currency
+        path: number
   
   # TODO: supermodel number
   quantity:
-    priority: 5
+    priority: 6
     classifier:
       nlu: quantity
     attributes:
@@ -86,6 +90,28 @@ intents:
       match: no
 
 states:
+  askMoreExpense: 
+    float: 
+      condition: 
+        - "context.category && context.expense_amount && context.quantity && context.total"
+        - "intent == 'intentGoToAskMore'"
+    enter: 
+      context.category: "null"
+      context.expense_amount: "null"
+      context.quantity: "null"
+      context.total: "null"
+    action:
+      - name: askMoreExpense
+      # - name: goToMainInfo
+      #   condition: "intent == 'yes'"
+    transitions: 
+      init:
+        priority: 2
+        condition: "intent == 'intentGoToMainInfo'"
+      askMoreExpense:
+        fallback: true
+
+
   init:
     initial: true
     action: 
@@ -106,31 +132,24 @@ states:
         condition: "context.category && context.expense_amount && !context.quantity"
       - name: saveQuantity
         condition: "context.category && context.expense_amount && context.quantity"
-      # TODO: callapi untuk save category, expense dan quantity
+        # TODO: callapi untuk save category, expense dan quantity
+      - name: goToAskMore
+        condition: "context.category && context.expense_amount && context.quantity"
     enter:
       # context.category: attributes.kebutuhan || attributes.tagihan || attributes.sosial || attributes.tabungan
       context.category: context.category || attributes.category
-      context.expense_amount: attributes.expense_amount || attributes.expense_amount
+      context.expense_amount: context.expense_amount || attributes.expense_amount
       context.quantity: context.quantity || attributes.quantity || 0
-      # data.category: data.category || context.category || attributes.kebutuhan || attributes.tagihan || attributes.sosial || attributes.tabungan
+      context.total: context.quantity * context.expense_amount
+
       data.category: data.category || context.category || attributes.category
       data.expense_amount: data.expense_amount || context.expense_amount || attributes.expense_amount
       data.quantity: data.quantity || context.quantity || attributes.quantity
     transitions: 
-      init:
-        fallback: true
-    
-  askMoreExpense: 
-    float: 
-      condition: "context.quantity && context.expense_amount && context.quantity"
-    action:
-      - name: askMoreExpense
-      # - name: goToMainInfo
-    transitions: 
-      # init:
-      #   priority: 2
-      #   condition: content == 'goToMainInfo'
       askMoreExpense:
+        priority: 2
+        condition: "intent == 'intentGoToAskMore'"
+      init:
         fallback: true
 
 actions:
@@ -139,10 +158,10 @@ actions:
     type: command
     options: 
       command: goToMainInfo
-  goToExpense: 
+  goToAskMore: 
     type: command
     options: 
-      command: goToExpense
+      command: goToAskMore
   # text
   introExpense:
     type: text
@@ -175,4 +194,4 @@ actions:
   askMoreExpense:
     type: text
     options:
-      text: 'Ada lagi ga?'
+      text: 'Ada pengeluaran lagi ga?'
