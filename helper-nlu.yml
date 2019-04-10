@@ -49,6 +49,48 @@ yesno:
           - salah
           - gak
           - jangan
+
+expense_category:
+  type: keyword
+    options:
+      keywords:
+        'tabungan':
+          - nabung
+          - tabungan
+          - menabung
+        'sosial':
+          - amal
+          - sedekah
+          - zakat
+          - hadiah
+          - kado
+          - ulang tahun
+          - traktir
+        'tagihan':
+          - kartu kredit
+          - cc
+          - kredit motor
+          - kredit mobil
+          - pln
+          - listrik
+          - tagihan listrik
+          - tagihan air
+          - tagihan pdam
+          - pdam
+        'kebutuhan':
+          - makanan
+          - makan
+          - jajan
+          - minum
+          - minuman
+          - hangout
+          - nonton bioskop
+          - transport
+          - bensin
+          - top up busway
+          - top up krl
+          - top up mrt
+
 ner:
   type: verstandTagger
   options:

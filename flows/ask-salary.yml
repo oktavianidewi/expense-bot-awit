@@ -48,8 +48,8 @@ states:
       # TODO: callapi untuk save payday
       - name: bridgeToExpense
         condition: "data.salary_amount && data.payday_dt"
-      # - name: goToExpense
-      #   condition: "data.salary_amount && data.payday_dt"
+      - name: goToExpense
+        condition: "data.salary_amount && data.payday_dt"
     enter:
       context.salary_amount: attributes.salary_amount
       context.payday_dt: attributes.payday_dt

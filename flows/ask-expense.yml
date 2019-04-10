@@ -24,7 +24,53 @@ intents:
     type: command
     condition: "content == 'goToExpense'"
   
-  # TODO: supermodel currency
+  # expense-category
+  tabungan:
+    priority: 5
+    classifier:
+      nlu: expense_category
+      options:
+        labels: true
+      match: tabungan
+    attributes:
+      category:
+        nlu: expense_category
+        path: tabungan
+  sosial:
+    priority: 5
+    classifier:
+      nlu: expense_category
+      options:
+        labels: true
+      match: sosial
+    attributes:
+      category:
+        nlu: expense_category
+        path: sosial
+  tagihan:
+    priority: 5
+    classifier:
+      nlu: expense_category
+      options:
+        labels: true
+      match: tagihan
+    attributes:
+      category:
+        nlu: expense_category
+        path: tagihan
+  kebutuhan:
+    priority: 5
+    classifier:
+      nlu: expense_category
+      options:
+        labels: true
+      match: kebutuhan
+    attributes:
+      category:
+        nlu: expense_category
+        path: kebutuhan
+  
+        # TODO: supermodel currency
   expense:
     priority: 5
     classifier:
@@ -64,29 +110,38 @@ states:
   init:
     initial: true
     action: 
+      - name: introExpense 
+        condition: "!context.category && !context.expense_amount && !context.quantity"
+
+      - name: askCategory 
+        condition: "!context.category && !context.expense_amount && !context.quantity"
+      - name: saveCategory
+        condition: "context.category && !context.expense_amount && !context.quantity"
+
       - name: askExpense 
-        condition: "!context.expense_amount"
+        condition: "context.category && !context.expense_amount && !context.quantity"
       - name: saveExpense
-        condition: "context.expense_amount"
-      # TODO: callapi untuk save expense
+        condition: "context.category && context.expense_amount && !context.quantity"
 
       - name: askQuantity 
-        condition: "!context.quantity"
+        condition: "context.category && context.expense_amount && !context.quantity"
       - name: saveQuantity
-        condition: "context.quantity"
-      # TODO: callapi untuk save quantity
+        condition: "context.category && context.expense_amount && context.quantity"
+      # TODO: callapi untuk save category, expense dan quantity
     enter:
+      context.category: attributes.category
       context.expense_amount: attributes.expense_amount
       context.quantity: attributes.quantity
-      data.expense_amount: data.expense_amount || attributes.expense_amount
-      data.quantity: data.quantity || attributes.quantity
+      data.category: data.category || context.category || attributes.category
+      data.expense_amount: data.expense_amount || context.expense_amount || attributes.expense_amount
+      data.quantity: data.quantity || context.quantity || attributes.quantity
     transitions: 
       init:
         fallback: true
     
   askMoreExpense: 
     float: 
-      condition: "context.expense_amount && context.quantity"
+      condition: "context.quantity && context.expense_amount && context.quantity"
     action:
       - name: askMoreExpense
       # - name: goToMainInfo
@@ -108,6 +163,18 @@ actions:
     options: 
       command: goToExpense
   # text
+  introExpense:
+    type: text
+    options:
+      text: 'Hai, $(data.name)! Yuk, kita catat pengeluaran harian kamu.'
+  askCategory:
+    type: text
+    options:
+      text: 'Pengeluarannya termasuk apa? Isi dengan kategori Charity/Investment/Needs/Others.'
+  saveCategory:
+    type: text
+    options:
+      text: 'Oke, $(data.name), gw simpan kategori pengeluarannya.'
   askExpense:
     type: text
     options:
