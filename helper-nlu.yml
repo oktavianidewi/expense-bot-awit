@@ -52,44 +52,79 @@ yesno:
 
 expense_category:
   type: keyword
-    options:
-      keywords:
-        'tabungan':
-          - nabung
-          - tabungan
-          - menabung
-        'sosial':
-          - amal
-          - sedekah
-          - zakat
-          - hadiah
-          - kado
-          - ulang tahun
-          - traktir
-        'tagihan':
-          - kartu kredit
-          - cc
-          - kredit motor
-          - kredit mobil
-          - pln
-          - listrik
-          - tagihan listrik
-          - tagihan air
-          - tagihan pdam
-          - pdam
-        'kebutuhan':
-          - makanan
-          - makan
-          - jajan
-          - minum
-          - minuman
-          - hangout
-          - nonton bioskop
-          - transport
-          - bensin
-          - top up busway
-          - top up krl
-          - top up mrt
+  options:
+    keywords:
+      'tabungan':
+        - nabung
+        - tabungan
+        - menabung
+      'sosial':
+        - amal
+        - sedekah
+        - zakat
+        - hadiah
+        - kado
+        - ulang tahun
+        - traktir
+      'tagihan':
+        - kartu kredit
+        - cc
+        - kredit motor
+        - kredit mobil
+        - pln
+        - listrik
+        - tagihan listrik
+        - tagihan air
+        - tagihan pdam
+        - pdam
+      'kebutuhan':
+        - makanan
+        - makan
+        - jajan
+        - minum
+        - minuman
+        - hangout
+        - nonton bioskop
+        - transport
+        - bensin
+        - top up busway
+        - top up krl
+        - top up mrt
+
+quantity:
+  type: keyword
+  options:
+    keywords:
+      '1':
+          - 1
+          - satu
+      '2':
+          - 2
+          - dua
+      '3':
+          - 3
+          - tiga
+      '4':
+          - 4
+          - empat
+      '5':
+          - 5
+          - lima
+      '6':
+          - 6
+          - enam
+      '7':
+          - 7
+          - tujuh
+      '8':
+          - 8
+          - delapan
+      '9':
+          - 9
+          - sembilan
+      '10':
+          - 10
+          - sepuluh
 
 ner:
   type: verstandTagger

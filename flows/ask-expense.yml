@@ -29,48 +29,32 @@ intents:
     priority: 5
     classifier:
       nlu: expense_category
-      options:
-        labels: true
-      match: tabungan
     attributes:
       category:
         nlu: expense_category
-        path: tabungan
   sosial:
     priority: 5
     classifier:
       nlu: expense_category
-      options:
-        labels: true
-      match: sosial
     attributes:
       category:
         nlu: expense_category
-        path: sosial
   tagihan:
     priority: 5
     classifier:
       nlu: expense_category
-      options:
-        labels: true
-      match: tagihan
     attributes:
       category:
         nlu: expense_category
-        path: tagihan
   kebutuhan:
     priority: 5
     classifier:
       nlu: expense_category
-      options:
-        labels: true
-      match: kebutuhan
     attributes:
       category:
         nlu: expense_category
-        path: kebutuhan
   
-        # TODO: supermodel currency
+  # TODO: supermodel currency
   expense:
     priority: 5
     classifier:
@@ -87,14 +71,10 @@ intents:
   quantity:
     priority: 5
     classifier:
-      nlu: katasupmod
-      options:
-        labels: true
-      match: number
+      nlu: quantity
     attributes:
       quantity:
-        nlu: katasupmod
-        path: number
+        nlu: quantity
   
   yes:
     classifier:
@@ -104,7 +84,6 @@ intents:
     classifier:
       nlu: yesno
       match: no
-
 
 states:
   init:
@@ -129,9 +108,11 @@ states:
         condition: "context.category && context.expense_amount && context.quantity"
       # TODO: callapi untuk save category, expense dan quantity
     enter:
-      context.category: attributes.category
-      context.expense_amount: attributes.expense_amount
-      context.quantity: attributes.quantity
+      # context.category: attributes.kebutuhan || attributes.tagihan || attributes.sosial || attributes.tabungan
+      context.category: context.category || attributes.category
+      context.expense_amount: attributes.expense_amount || attributes.expense_amount
+      context.quantity: context.quantity || attributes.quantity || 0
+      # data.category: data.category || context.category || attributes.kebutuhan || attributes.tagihan || attributes.sosial || attributes.tabungan
       data.category: data.category || context.category || attributes.category
       data.expense_amount: data.expense_amount || context.expense_amount || attributes.expense_amount
       data.quantity: data.quantity || context.quantity || attributes.quantity
@@ -170,7 +151,7 @@ actions:
   askCategory:
     type: text
     options:
-      text: 'Pengeluarannya termasuk apa? Isi dengan kategori Charity/Investment/Needs/Others.'
+      text: 'Pengeluarannya termasuk apa? Isi dengan kategori Tabungan/Sosial/Tagihan/Kebutuhan.'
   saveCategory:
     type: text
     options:
@@ -178,11 +159,11 @@ actions:
   askExpense:
     type: text
     options:
-      text: 'Hai, kamu udah keluarin duit untuk apa aja hari ini?'
+      text: 'Di kategori $(context.category), kamu keluarin uang sejumlah berapa?'
   saveExpense:
     type: text
     options:
-      text: 'Oke, $(data.name), gw simpan pengeluaran hariannya.'
+      text: 'Oke, $(data.name), gw simpan pengeluaran lo.'
   askQuantity:
     type: text
     options:
@@ -190,7 +171,7 @@ actions:
   saveQuantity:
     type: text
     options:
-      text: 'Oke, jadi total pengeluarannya aku catat $(context.expense_amount)*$(context.quantity) ya.'
+      text: 'Oke, jadi total pengeluarannya aku catat $(context.total) ya.'
   askMoreExpense:
     type: text
     options:
